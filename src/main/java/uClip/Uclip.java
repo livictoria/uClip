@@ -33,12 +33,11 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-public class Uclip extends JPanel implements ActionListener, DatabaseReference.CompletionListener {
+public class Uclip extends JPanel implements DatabaseReference.CompletionListener {
 
 	    private FirebaseDatabase db;
 	    private DatabaseReference ref;
-	    private Robot robot;
-
+	  
 	    private ValueEventListener keyListener, mouseListener;
 
 	    public Uclip() {
@@ -47,11 +46,10 @@ public class Uclip extends JPanel implements ActionListener, DatabaseReference.C
 	        setup();
 
 	        JButton startButton = new JButton("Start");
-	        startButton.addActionListener(this);
+	      
 
 	        JButton stopButton = new JButton("Stop");
-	        stopButton.addActionListener(this);
-
+	      
 	        JPanel testPanel = new JPanel();
 	        testPanel.add(startButton);
 	        testPanel.add(stopButton);
@@ -62,59 +60,10 @@ public class Uclip extends JPanel implements ActionListener, DatabaseReference.C
 
 	    private void setup() {
 	        db = FirebaseDatabase.getInstance();
-	        ref = db.getReference("room"); //TODO:: authentication
-	        try {
-	            robot = new Robot(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice());
-	            //robot.setAutoDelay(50);
-	            robot.setAutoWaitForIdle(true);
-	        } catch (AWTException e) {
-	            e.printStackTrace();
-	            System.exit(1);
-	        }
-
-	        mouseListener = new ValueEventListener() {
-	            @Override
-	            public void onDataChange(DataSnapshot ds) {
-	                Point point = MouseInfo.getPointerInfo().getLocation();
-//	                Vector2D swipe = ds.getValue(Vector2D.class);
-////	                int x = Math.round(swipe.x);
-////	                int y = Math.round(swipe.y);
-//	                onMouseMove(point.x - x, point.y - y);
-	            }
-
-	            @Override
-	            public void onCancelled(DatabaseError databaseError) {
-
-	            }
-	        };
-
-	        keyListener = new ValueEventListener() {
-	            @Override
-	            public void onDataChange(DataSnapshot dataSnapshot) {
-	                for (DataSnapshot action : dataSnapshot.getChildren()) {
-	                    if (action.getKey().equals("button")) {
-	                        for (DataSnapshot ds : action.getChildren()) {
-	                            String keyString = ds.getValue().toString();
-	                            System.out.println("keyString: " + keyString);
-	                            if (keyString.equals("left")) {
-	                                onKeyPressed(MouseEvent.BUTTON1_DOWN_MASK);
-	                            } else if (keyString.equals("right")) {
-	                                onKeyPressed(MouseEvent.BUTTON3_DOWN_MASK);
-	                            } else if (keyString.equals("space")) {
-	                                onKeyPressed(KeyEvent.VK_SPACE);
-	                            }
-	                        }
-	                    }
-	                }
-	            }
-
-	            @Override
-	            public void onCancelled(DatabaseError databaseError) {
-
-	            }
-	        };
+	        ref = db.getReference("copy"); 
+	        //do other code here
 	    }
-
+/*
 	    @Override
 	    public void actionPerformed(ActionEvent e) {
 	        switch (e.getActionCommand()) {
@@ -134,31 +83,14 @@ public class Uclip extends JPanel implements ActionListener, DatabaseReference.C
 	        System.out.println("clearQueue");
 	        dr.setValue(null, this);
 	    }
-
+*/
 	    @Override
 	    public void onComplete(DatabaseError error, DatabaseReference ref) {
 //	        ref.child("swipe").setValue(new Vector2D(0, 0));
-	        ref.child("swipe").addValueEventListener(mouseListener);
-	        ref.addValueEventListener(keyListener);
+	        //ref.child("swipe").addValueEventListener(mouseListener);
+	        //ref.addValueEventListener(keyListener);
 //	        ref.child("swipe").addValueEventListener(mouseListener);
 //	        ref.child("button").addValueEventListener(keyListener);
-	    }
-
-	    public void onKeyPressed(int keyCode) {
-	        if (keyCode == MouseEvent.BUTTON1_DOWN_MASK || keyCode == MouseEvent.BUTTON3_DOWN_MASK) {
-	            robot.mousePress(keyCode);
-	            robot.delay(50);
-	            robot.mouseRelease(keyCode);
-	        } else {
-	            robot.keyPress(keyCode);
-	            robot.delay(50);
-	            robot.keyRelease(keyCode);
-	        }
-	        ref.child("button").setValue(null);
-	    }
-
-	    public void onMouseMove(int x, int y) {
-	        robot.mouseMove(x, y);
 	    }
 
 	    private static void createAndShowGUI() {
