@@ -48,7 +48,7 @@ public class Uclip extends JPanel implements DatabaseReference.CompletionListene
 	        JButton startButton = new JButton("Start");
 	      
 
-	        JButton stopButton = new JButton("Stop");
+	        JButton stopButton = new JButton("not");
 	      
 	        JPanel testPanel = new JPanel();
 	        testPanel.add(startButton);
