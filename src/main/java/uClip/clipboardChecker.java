@@ -1,15 +1,19 @@
 package uClip;
 
-import java.awt.*;
+import java.awt.Toolkit;
 import java.awt.datatransfer.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
+import com.google.firebase.*;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
   
 public class clipboardChecker extends Thread implements ClipboardOwner {
   Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -17,11 +21,36 @@ public class clipboardChecker extends Thread implements ClipboardOwner {
   private DatabaseReference ref;
   
   public void run() {
+	    db = FirebaseDatabase.getInstance();
+	    ref = db.getReference("copy"); 
+	    ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+	          	String str = dataSnapshot.getValue(String.class);
+            	System.out.println("hi");
+	      		Toolkit toolkit = Toolkit.getDefaultToolkit();
+	      		Clipboard clipboard = toolkit.getSystemClipboard();
+	      		StringSelection strSel = new StringSelection(str);
+	      		clipboard.setContents(strSel, null);
+            }
+
+			@Override
+			public void onCancelled(DatabaseError arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+        });
+	  
+
+	   
+	  
     Transferable trans = sysClip.getContents(this);
     regainOwnership(trans);
     System.out.println("Listening to board...");
+	  
     while(true) {}
   }
+  
   
   public void lostOwnership(Clipboard c, Transferable t) {
 	  try {
@@ -42,6 +71,8 @@ public class clipboardChecker extends Thread implements ClipboardOwner {
 	  regainOwnership(contents);
 	}
   
+
+  
   void processContents(Transferable t) throws UnsupportedFlavorException, IOException {
 
 	String data = (String) t.getTransferData(DataFlavor.stringFlavor);
@@ -55,6 +86,8 @@ public class clipboardChecker extends Thread implements ClipboardOwner {
   void regainOwnership(Transferable t) {
     sysClip.setContents(t, this);
   }
+  
+  
   
   public static void main(String[] args) {
       try {
