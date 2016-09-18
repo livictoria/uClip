@@ -46,7 +46,7 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-public class Uclip extends JPanel implements ClipboardOwner {
+public class Uclip extends JPanel /*implements ClipboardOwner*/ {
 
     private FirebaseDatabase db;
     private DatabaseReference ref;
@@ -191,6 +191,7 @@ public class Uclip extends JPanel implements ClipboardOwner {
         frame.setVisible(true);
     }
 
+    /*
     @Override
     public void lostOwnership(Clipboard clipboard, Transferable contents) {
         try {
@@ -206,6 +207,7 @@ public class Uclip extends JPanel implements ClipboardOwner {
             e.printStackTrace();
         }
     }
+    */
 
 
     public static void main(String args[]) {
@@ -247,7 +249,8 @@ public class Uclip extends JPanel implements ClipboardOwner {
                         System.out.println("wrong data flavor type");
                     }
                 }
-                Thread.sleep(1000);
+                //too short and there is a race condition?
+                Thread.sleep(2500);
                 System.out.println("post sleep");
             }
             return null;
