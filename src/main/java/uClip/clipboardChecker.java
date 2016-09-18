@@ -24,9 +24,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.internal.Log;
 
-  
-public class clipboardChecker extends Thread implements ClipboardOwner {
+
+public class ClipboardChecker extends Thread implements ClipboardOwner {
   Clipboard sysClip = Toolkit.getDefaultToolkit().getSystemClipboard();
   private FirebaseDatabase db;
   private DatabaseReference ref;
@@ -59,7 +60,7 @@ public class clipboardChecker extends Thread implements ClipboardOwner {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}  
-	            	UrlImagetoPaste.write(image);
+	            	UrlImagetoPaste.writeToClipboard(image);
 	                javax.swing.ImageIcon icon = new javax.swing.ImageIcon( UrlImagetoPaste.read() );
 	                javax.swing.JLabel label = new javax.swing.JLabel( icon );
 	        	}
@@ -89,6 +90,7 @@ public class clipboardChecker extends Thread implements ClipboardOwner {
  
   
   public void lostOwnership(Clipboard c, Transferable t) {
+	  Log.d("TEST", "Lost ownership");
 	  try {
 	    this.sleep(10000);
 	  } catch(Exception e) {
@@ -135,7 +137,7 @@ public class clipboardChecker extends Thread implements ClipboardOwner {
       } catch (FileNotFoundException e) {
           e.printStackTrace();
       }
-    clipboardChecker u = new clipboardChecker();
+    ClipboardChecker u = new ClipboardChecker();
     u.start();
 
   }
