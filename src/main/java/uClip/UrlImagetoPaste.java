@@ -33,7 +33,7 @@ public class UrlImagetoPaste {
      *  @param  image - the image to be added to the system clipboard
      */
     
-    public static void write(Image image)
+    public static void writeToClipboard(Image image)
     {
         if (image == null)
             throw new IllegalArgumentException ("Image can't be null");
